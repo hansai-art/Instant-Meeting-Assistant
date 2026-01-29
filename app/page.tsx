@@ -1,11 +1,7 @@
-import MainPage from "@/components/main";
+import { AdvisorPage } from "@/components/advisor/AdvisorPage";
 
 // export const runtime = "edge";
 
 export default function Home() {
-  return (
-    <main className="m-2 overscroll-none">
-      <MainPage />
-    </main>
-  );
+  return <AdvisorPage />;
 }

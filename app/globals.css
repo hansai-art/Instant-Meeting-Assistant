@@ -1,10 +1,111 @@
 @import "tailwindcss";
 
+/* ============================================
+   即時會議 AI 顧問 - 全域樣式
+   ============================================ */
+
+/* ============ CSS 變數 - 暗色主題 ============ */
+
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  /* 背景色 */
+  --bg-primary: 15 23 42;       /* slate-900 */
+  --bg-secondary: 30 41 59;     /* slate-800 */
+  --bg-tertiary: 51 65 85;      /* slate-700 */
+  --bg-card: 30 41 59;          /* slate-800 */
+
+  /* 文字色 */
+  --text-primary: 248 250 252;  /* slate-50 */
+  --text-secondary: 148 163 184; /* slate-400 */
+  --text-muted: 100 116 139;    /* slate-500 */
+
+  /* 邊框色 */
+  --border-color: 51 65 85;     /* slate-700 */
+  --border-hover: 71 85 105;    /* slate-600 */
+
+  /* 強調色 */
+  --accent-primary: 139 92 246;  /* violet-500 */
+  --accent-secondary: 217 70 239; /* fuchsia-500 */
+  --accent-glow: 139 92 246;
+
+  /* 狀態色 */
+  --status-recording: 52 211 153; /* emerald-400 */
+  --status-paused: 251 191 36;    /* amber-400 */
+  --status-error: 248 113 113;    /* red-400 */
+  --status-success: 74 222 128;   /* green-400 */
+
+  /* 建議類型色 */
+  --advice-tactical: 59 130 246;   /* blue-500 */
+  --advice-warning: 245 158 11;    /* amber-500 */
+  --advice-opportunity: 34 197 94; /* green-500 */
+  --advice-clarify: 168 85 247;    /* purple-500 */
+  --advice-positive: 16 185 129;   /* emerald-500 */
+
+  /* 建議背景色 */
+  --advice-tactical-bg: 59 130 246 / 0.1;
+  --advice-warning-bg: 245 158 11 / 0.1;
+  --advice-opportunity-bg: 34 197 94 / 0.1;
+  --advice-clarify-bg: 168 85 247 / 0.1;
+  --advice-positive-bg: 16 185 129 / 0.1;
+
+  /* Tailwind 覆寫 */
+  --foreground-rgb: var(--text-primary);
+  --background-start-rgb: var(--bg-primary);
+  --background-end-rgb: var(--bg-primary);
 }
+
+/* ============ 亮色主題 ============ */
+
+[data-theme="light"] {
+  --bg-primary: 248 250 252;    /* slate-50 */
+  --bg-secondary: 241 245 249;  /* slate-100 */
+  --bg-tertiary: 226 232 240;   /* slate-200 */
+  --bg-card: 255 255 255;       /* white */
+
+  --text-primary: 15 23 42;     /* slate-900 */
+  --text-secondary: 71 85 105;  /* slate-600 */
+  --text-muted: 148 163 184;    /* slate-400 */
+
+  --border-color: 226 232 240;  /* slate-200 */
+  --border-hover: 203 213 225;  /* slate-300 */
+}
+
+/* ============ 基礎樣式 ============ */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: rgb(var(--bg-primary));
+  color: rgb(var(--text-primary));
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============ 滾動條樣式 ============ */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(var(--bg-secondary));
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--border-color));
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--border-hover));
+}
+
+/* ============ 動畫延遲 ============ */
 
 .animation-delay-100 {
   animation-delay: 0.1s;
@@ -14,7 +115,12 @@
   animation-delay: 0.2s;
 }
 
-/* Fade in animation for answers */
+.animation-delay-300 {
+  animation-delay: 0.3s;
+}
+
+/* ============ 淡入動畫 ============ */
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -24,25 +130,15 @@
   }
 }
 
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in forwards;
+}
+
 .fade-in-answer {
   animation: fadeIn 0.3s ease-in;
 }
 
-/* Loading skeleton animation */
-@keyframes shimmer {
-  0% {
-    background-position: -1000px 0;
-  }
-  100% {
-    background-position: 1000px 0;
-  }
-}
-
-.animate-skeleton {
-  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
-  background-size: 1000px 100%;
-  animation: shimmer 2s infinite;
-}
+/* ============ 縮放淡入動畫 ============ */
 
 @keyframes fadeInScale {
   from {
@@ -56,5 +152,513 @@
 }
 
 .animate-fade-in-scale {
-  animation: fadeInScale 0.2s ease-out;
+  animation: fadeInScale 0.2s ease-out forwards;
+}
+
+/* ============ 滑入動畫（建議卡片） ============ */
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInFromRight 0.3s ease-out forwards;
+}
+
+.animate-slide-in-top {
+  animation: slideInFromTop 0.3s ease-out forwards;
+}
+
+.animate-slide-in-bottom {
+  animation: slideInFromBottom 0.3s ease-out forwards;
+}
+
+/* ============ 滑出動畫 ============ */
+
+@keyframes slideOutToRight {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+}
+
+.animate-slide-out-right {
+  animation: slideOutToRight 0.2s ease-in forwards;
+}
+
+/* ============ 脈衝動畫（錄音中） ============ */
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes pulseScale {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+@keyframes pulseRing {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse-recording {
+  animation: pulseScale 2s ease-in-out infinite;
+}
+
+.animate-pulse-ring {
+  animation: pulseRing 2s ease-in-out infinite;
+}
+
+/* ============ 震動動畫（新建議提醒） ============ */
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-2px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(2px);
+  }
+}
+
+@keyframes pulseBorder {
+  0%, 100% {
+    border-color: rgb(var(--border-color));
+  }
+  50% {
+    border-color: rgb(var(--accent-primary));
+  }
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.animate-pulse-border {
+  animation: pulseBorder 1s ease-in-out;
+}
+
+/* ============ 載入骨架動畫 ============ */
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-skeleton {
+  background: linear-gradient(
+    90deg,
+    rgb(var(--bg-secondary)) 25%,
+    rgb(var(--bg-tertiary)) 50%,
+    rgb(var(--bg-secondary)) 75%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* ============ 呼吸燈動畫（處理中） ============ */
+
+@keyframes breathe {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-breathe {
+  animation: breathe 2s ease-in-out infinite;
+}
+
+/* ============ 旋轉動畫（載入中） ============ */
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin 2s linear infinite;
+}
+
+/* ============ 建議卡片樣式 ============ */
+
+.suggestion-card {
+  backdrop-filter: blur(8px);
+  border-width: 1px;
+  border-style: solid;
+  transition: all 0.2s ease;
+}
+
+.suggestion-card:hover {
+  transform: translateY(-1px);
+}
+
+.suggestion-card-tactical {
+  background: rgba(var(--advice-tactical-bg));
+  border-color: rgb(var(--advice-tactical));
+}
+
+.suggestion-card-warning {
+  background: rgba(var(--advice-warning-bg));
+  border-color: rgb(var(--advice-warning));
+}
+
+.suggestion-card-opportunity {
+  background: rgba(var(--advice-opportunity-bg));
+  border-color: rgb(var(--advice-opportunity));
+}
+
+.suggestion-card-clarify {
+  background: rgba(var(--advice-clarify-bg));
+  border-color: rgb(var(--advice-clarify));
+}
+
+.suggestion-card-positive {
+  background: rgba(var(--advice-positive-bg));
+  border-color: rgb(var(--advice-positive));
+}
+
+/* ============ 錄音按鈕樣式 ============ */
+
+.record-button {
+  position: relative;
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    rgb(var(--accent-primary)),
+    rgb(var(--accent-secondary))
+  );
+  box-shadow:
+    0 4px 15px rgba(var(--accent-primary) / 0.4),
+    0 0 0 0 rgba(var(--accent-primary) / 0.4);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.record-button:hover {
+  transform: scale(1.05);
+  box-shadow:
+    0 6px 20px rgba(var(--accent-primary) / 0.5),
+    0 0 0 0 rgba(var(--accent-primary) / 0.4);
+}
+
+.record-button:active {
+  transform: scale(0.98);
+}
+
+.record-button.recording {
+  background: linear-gradient(
+    135deg,
+    rgb(var(--status-recording)),
+    rgb(52 211 153)
+  );
+  box-shadow:
+    0 4px 15px rgba(var(--status-recording) / 0.4),
+    0 0 0 8px rgba(var(--status-recording) / 0.2);
+  animation: pulseScale 2s ease-in-out infinite;
+}
+
+.record-button.paused {
+  background: linear-gradient(
+    135deg,
+    rgb(var(--status-paused)),
+    rgb(251 191 36)
+  );
+  box-shadow:
+    0 4px 15px rgba(var(--status-paused) / 0.4),
+    0 0 0 0 rgba(var(--status-paused) / 0.4);
+}
+
+/* ============ 狀態指示器 ============ */
+
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.status-indicator-recording {
+  background: rgba(var(--status-recording) / 0.2);
+  color: rgb(var(--status-recording));
+}
+
+.status-indicator-paused {
+  background: rgba(var(--status-paused) / 0.2);
+  color: rgb(var(--status-paused));
+}
+
+.status-indicator-idle {
+  background: rgba(var(--text-muted) / 0.2);
+  color: rgb(var(--text-muted));
+}
+
+/* ============ 轉錄面板樣式 ============ */
+
+.transcript-panel {
+  background: rgb(var(--bg-secondary));
+  border: 1px solid rgb(var(--border-color));
+  border-radius: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.transcript-line {
+  padding: 8px 12px;
+  border-bottom: 1px solid rgb(var(--border-color) / 0.5);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.transcript-line:last-child {
+  border-bottom: none;
+}
+
+.transcript-line.interim {
+  color: rgb(var(--text-muted));
+  font-style: italic;
+}
+
+.transcript-line.final {
+  color: rgb(var(--text-primary));
+}
+
+/* ============ 折疊面板樣式 ============ */
+
+.collapsible-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgb(var(--bg-secondary));
+  border: 1px solid rgb(var(--border-color));
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.collapsible-header:hover {
+  background: rgb(var(--bg-tertiary) / 0.5);
+}
+
+.collapsible-header[data-state="open"] {
+  border-radius: 12px 12px 0 0;
+  border-bottom-color: transparent;
+}
+
+.collapsible-content {
+  background: rgb(var(--bg-secondary));
+  border: 1px solid rgb(var(--border-color));
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  overflow: hidden;
+}
+
+/* ============ 表單元素樣式 ============ */
+
+.input-dark {
+  background: rgb(var(--bg-secondary));
+  border: 1px solid rgb(var(--border-color));
+  color: rgb(var(--text-primary));
+  transition: border-color 0.2s ease;
+}
+
+.input-dark:focus {
+  border-color: rgb(var(--accent-primary));
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(var(--accent-primary) / 0.2);
+}
+
+.input-dark::placeholder {
+  color: rgb(var(--text-muted));
+}
+
+/* ============ 按鈕樣式 ============ */
+
+.btn-primary {
+  background: linear-gradient(
+    135deg,
+    rgb(var(--accent-primary)),
+    rgb(var(--accent-secondary))
+  );
+  color: white;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: rgb(var(--bg-tertiary));
+  color: rgb(var(--text-primary));
+  border: 1px solid rgb(var(--border-color));
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: rgb(var(--border-color));
+}
+
+/* ============ 徽章樣式 ============ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 9999px;
+}
+
+.badge-tactical {
+  background: rgba(var(--advice-tactical) / 0.2);
+  color: rgb(var(--advice-tactical));
+}
+
+.badge-warning {
+  background: rgba(var(--advice-warning) / 0.2);
+  color: rgb(var(--advice-warning));
+}
+
+.badge-opportunity {
+  background: rgba(var(--advice-opportunity) / 0.2);
+  color: rgb(var(--advice-opportunity));
+}
+
+.badge-clarify {
+  background: rgba(var(--advice-clarify) / 0.2);
+  color: rgb(var(--advice-clarify));
+}
+
+.badge-positive {
+  background: rgba(var(--advice-positive) / 0.2);
+  color: rgb(var(--advice-positive));
+}
+
+/* ============ 隱私聲明樣式 ============ */
+
+.privacy-notice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: rgb(var(--bg-secondary));
+  border: 1px solid rgb(var(--border-color));
+  border-radius: 12px;
+  font-size: 13px;
+  color: rgb(var(--text-secondary));
+}
+
+.privacy-notice-icon {
+  color: rgb(var(--status-success));
+}
+
+/* ============ 響應式設計 ============ */
+
+@media (max-width: 640px) {
+  .record-button {
+    width: 100px;
+    height: 100px;
+  }
+
+  .suggestion-card {
+    padding: 12px;
+  }
+
+  .transcript-panel {
+    max-height: 150px;
+  }
+}
+
+/* ============ 無障礙功能 ============ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* 焦點可見性 */
+:focus-visible {
+  outline: 2px solid rgb(var(--accent-primary));
+  outline-offset: 2px;
 }

@@ -1,18 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { PWARegister } from "@/components/PWARegister";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export const metadata: Metadata = {
-  title: "Realtime Interview Copilot",
-  description: "Get Interview Answers Realtime",
+  title: "AI 會議顧問 - 即時會議助手",
+  description: "主動式即時會議 AI 顧問，自動分析對話並提供策略建議",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
-    title: "Interview Copilot",
+    statusBarStyle: "black-translucent",
+    title: "AI 會議顧問",
   },
   formatDetection: {
     telephone: false,
@@ -33,7 +30,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#2f855a",
+  themeColor: "#0f172a", // slate-900 for dark theme
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -48,11 +45,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="zh-TW">
       <head>
         <link rel="icon" href="/icons/favicon.ico" />
       </head>
-      <body className={inter.className}>
+      <body className="font-sans bg-slate-900 text-white antialiased">
         <PWARegister />
         {children}
       </body>
