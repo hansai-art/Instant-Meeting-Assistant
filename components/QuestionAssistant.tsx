@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { ChevronDown, ChevronUp, GripHorizontal, SendIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { SendIcon, GripHorizontal, ChevronDown, ChevronUp } from "lucide-react";
 
 interface QuestionAssistantProps {
   onQuestionSubmit?: (question: string) => void;
@@ -136,8 +136,8 @@ export function QuestionAssistant({
       if (onQuestionSubmit) {
         onQuestionSubmit(question);
       }
-    } catch (err: any) {
-      if (err.name !== "AbortError") {
+    } catch (err: unknown) {
+      if (!(err instanceof Error && err.name === "AbortError")) {
         console.error("Error:", err);
         setError("取得回答失敗，請稍後再試。");
       }
@@ -173,7 +173,7 @@ export function QuestionAssistant({
   }, [isMinimized]);
 
   // Handle mouse drag
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseDown = (e: React.MouseEvent<HTMLElement>) => {
     if (!containerRef.current) return;
     setIsDragging(true);
     const rect = containerRef.current.getBoundingClientRect();
@@ -184,7 +184,7 @@ export function QuestionAssistant({
   };
 
   // Handle touch drag (mobile)
-  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+  const handleTouchStart = (e: React.TouchEvent<HTMLElement>) => {
     if (!containerRef.current) return;
     setIsDragging(true);
     const rect = containerRef.current.getBoundingClientRect();
@@ -285,13 +285,16 @@ export function QuestionAssistant({
       {/* Main Box */}
       <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
         {/* Drag Handle Header */}
-        <div
-          onMouseDown={handleMouseDown}
-          onTouchStart={handleTouchStart}
-          className="px-2.5 py-1.5 flex items-center gap-1.5 cursor-grab active:cursor-grabbing hover:transition-colors touch-none bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800"
-        >
-          <GripHorizontal size={12} />
-          <span className="text-xs font-medium flex-1">詢問 AI</span>
+        <div className="px-2.5 py-1.5 flex items-center gap-1.5 bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800">
+          <button
+            type="button"
+            onMouseDown={handleMouseDown}
+            onTouchStart={handleTouchStart}
+            className="flex flex-1 items-center gap-1.5 cursor-grab touch-none text-left active:cursor-grabbing"
+          >
+            <GripHorizontal size={12} />
+            <span className="text-xs font-medium">詢問 AI</span>
+          </button>
           <button
             type="button"
             onClick={() => setIsMinimized(!isMinimized)}

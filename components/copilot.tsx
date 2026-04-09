@@ -1,14 +1,14 @@
 "use client";
 
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import RecorderTranscriber from "@/components/recorder";
 import { useCallback, useEffect, useRef, useState } from "react";
-
-import { FLAGS, HistoryData, TranscriptionSegment } from "@/lib/types";
-import { Switch } from "@/components/ui/switch";
+import RecorderTranscriber from "@/components/recorder";
 import { TranscriptionDisplay } from "@/components/TranscriptionDisplay";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import type { HistoryData, TranscriptionSegment } from "@/lib/types";
+import { FLAGS } from "@/lib/types";
 
 interface CopilotProps {
   addInSavedData: (data: HistoryData) => void;
@@ -26,8 +26,7 @@ const modeDescriptions: Record<
   },
   [FLAGS.COPILOT]: {
     title: "協作模式",
-    description:
-      "適合需要即時建議、回覆草稿、追問方向或下一步行動建議的情境。",
+    description: "適合需要即時建議、回覆草稿、追問方向或下一步行動建議的情境。",
     shortcut: "C",
   },
 };
@@ -74,11 +73,12 @@ export function Copilot({ addInSavedData }: CopilotProps) {
 
   // Auto-scroll transcription box to bottom
   useEffect(() => {
+    if (transcriptionSegments.length === 0) return;
     if (transcriptionBoxRef.current) {
       transcriptionBoxRef.current.scrollTop =
         transcriptionBoxRef.current.scrollHeight;
     }
-  }, [transcriptionSegments]);
+  }, [transcriptionSegments.length]);
 
   const handleFlag = useCallback((checked: boolean) => {
     if (!checked) {
@@ -134,7 +134,7 @@ export function Copilot({ addInSavedData }: CopilotProps) {
   }, [handleKeyDown]);
 
   const addTextinTranscription = (text: string) => {
-    setTranscribedText((prev) => prev + " " + text);
+    setTranscribedText((prev) => `${prev} ${text}`);
   };
 
   const addTranscriptionSegment = (segment: TranscriptionSegment) => {
@@ -240,8 +240,8 @@ export function Copilot({ addInSavedData }: CopilotProps) {
           }
         }
       }
-    } catch (err: any) {
-      if (err.name !== "AbortError") {
+    } catch (err: unknown) {
+      if (!(err instanceof Error && err.name === "AbortError")) {
         console.error("Stream error:", err);
         setError(err instanceof Error ? err : new Error(String(err)));
       }
@@ -276,7 +276,8 @@ export function Copilot({ addInSavedData }: CopilotProps) {
       <div className="grid gap-3">
         <h1 className="text-3xl font-bold text-green-700">即時會議助理</h1>
         <p className="text-sm leading-6 text-gray-700">
-          這個頁面提供即時逐字稿、AI 摘要與協作建議。所有操作說明都以臺灣繁體中文呈現，方便你在會議進行中快速上手。
+          這個頁面提供即時逐字稿、AI
+          摘要與協作建議。所有操作說明都以臺灣繁體中文呈現，方便你在會議進行中快速上手。
         </p>
         <div className="grid gap-3 lg:grid-cols-3">
           {tutorialSections.map((section) => (
@@ -400,7 +401,8 @@ export function Copilot({ addInSavedData }: CopilotProps) {
           </button>
         )}
         <div className="flex whitespace-pre-wrap">
-          {completion || "AI 回應會顯示在這裡，方便你即時查看摘要、建議與下一步行動。"}
+          {completion ||
+            "AI 回應會顯示在這裡，方便你即時查看摘要、建議與下一步行動。"}
         </div>
       </div>
     </div>
