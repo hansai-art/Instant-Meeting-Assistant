@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { ChevronDown, ChevronUp, GripHorizontal, SendIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { SendIcon, GripHorizontal, ChevronDown, ChevronUp } from "lucide-react";
 
 interface QuestionAssistantProps {
   onQuestionSubmit?: (question: string) => void;
@@ -70,25 +70,24 @@ export function QuestionAssistant({
         body: JSON.stringify({
           prompt: question,
           flag: "copilot",
-          bg: `You are a professional interview coach helping candidates ace technical and behavioral interviews.
+          bg: `你是一位專業的面試教練與會議顧問，請一律使用臺灣繁體中文回答。
 
-IMPORTANT: Provide DETAILED, COMPREHENSIVE, INTERVIEW-READY answers. This is NOT for simple definitions - it's to help candidates answer interview questions perfectly.
+重要要求：請提供詳細、完整、可直接使用的回覆，協助使用者在面試或會議情境中快速掌握重點，而不是只給簡短定義。
 
-For ANY question:
-1. Start with clear definition or core concept
-2. Explain WHY it matters in interviews/industry
-3. Provide real-world examples and use cases
-4. Share key points/features/advantages they should mention
-5. Include practical tips on how to discuss this in an interview
-6. Add relevant best practices or common pitfalls to avoid
-7. Format with bullet points for clarity
+回答任何問題時都要：
+1. 先說明核心概念或直接答案
+2. 解釋為什麼這件事重要
+3. 提供真實情境範例與適用場景
+4. 整理使用者應該提到的重點、優勢或風險
+5. 給出可直接採用的表達建議或行動建議
+6. 補充最佳實務與常見誤區
+7. 優先用條列方式，方便快速閱讀
 
-Guidelines:
-- NO filler words ('alright', 'umm', 'ha', 'you know', 'basically', 'like')
-- Be detailed enough that candidate can use the answer directly
-- Include examples they can mention
-- Professional and authoritative tone
-- Structure answer for easy reference during interview`,
+其他規則：
+- 不要使用口語贅詞
+- 內容必須足夠具體，讓使用者可直接引用
+- 可加入實際例句與建議說法
+- 保持專業、清楚、好查閱`,
         }),
         signal: controller.current.signal,
       });
@@ -137,10 +136,10 @@ Guidelines:
       if (onQuestionSubmit) {
         onQuestionSubmit(question);
       }
-    } catch (err: any) {
-      if (err.name !== "AbortError") {
+    } catch (err: unknown) {
+      if (!(err instanceof Error && err.name === "AbortError")) {
         console.error("Error:", err);
-        setError("Failed to get answer. Please try again.");
+        setError("取得回答失敗，請稍後再試。");
       }
     } finally {
       setIsLoading(false);
@@ -174,7 +173,7 @@ Guidelines:
   }, [isMinimized]);
 
   // Handle mouse drag
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseDown = (e: React.MouseEvent<HTMLElement>) => {
     if (!containerRef.current) return;
     setIsDragging(true);
     const rect = containerRef.current.getBoundingClientRect();
@@ -185,7 +184,7 @@ Guidelines:
   };
 
   // Handle touch drag (mobile)
-  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+  const handleTouchStart = (e: React.TouchEvent<HTMLElement>) => {
     if (!containerRef.current) return;
     setIsDragging(true);
     const rect = containerRef.current.getBoundingClientRect();
@@ -278,7 +277,7 @@ Guidelines:
             <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse animation-delay-200" />
           </div>
           <span className="text-white text-xs font-medium flex-1">
-            Listening...
+            快問快答已就緒
           </span>
         </div>
       )}
@@ -286,18 +285,21 @@ Guidelines:
       {/* Main Box */}
       <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
         {/* Drag Handle Header */}
-        <div
-          onMouseDown={handleMouseDown}
-          onTouchStart={handleTouchStart}
-          className="px-2.5 py-1.5 flex items-center gap-1.5 cursor-grab active:cursor-grabbing hover:transition-colors touch-none bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800"
-        >
-          <GripHorizontal size={12} />
-          <span className="text-xs font-medium flex-1">Ask AI</span>
+        <div className="px-2.5 py-1.5 flex items-center gap-1.5 bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800">
+          <button
+            type="button"
+            onMouseDown={handleMouseDown}
+            onTouchStart={handleTouchStart}
+            className="flex flex-1 items-center gap-1.5 cursor-grab touch-none text-left active:cursor-grabbing"
+          >
+            <GripHorizontal size={12} />
+            <span className="text-xs font-medium">詢問 AI</span>
+          </button>
           <button
             type="button"
             onClick={() => setIsMinimized(!isMinimized)}
             className="p-1 rounded hover:bg-white hover:bg-opacity-20 transition-colors"
-            title={isMinimized ? "Expand" : "Minimize"}
+            title={isMinimized ? "展開" : "收合"}
           >
             {isMinimized ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </button>
@@ -313,10 +315,10 @@ Guidelines:
               ref={inputRef}
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              placeholder="Ask... (K)"
+              placeholder="輸入問題…（K）"
               disabled={isLoading}
               className="flex-1 border-0 text-xs h-7 placeholder-gray-400 focus:ring-1 focus:ring-green-500 bg-white text-gray-900"
-              title="Press Escape to clear answer, K to focus"
+              title="按 Esc 清除回答，按 K 聚焦輸入框"
             />
             <Button
               type="submit"

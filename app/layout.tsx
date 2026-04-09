@@ -1,18 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { PWARegister } from "@/components/PWARegister";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export const metadata: Metadata = {
-  title: "Realtime Interview Copilot",
-  description: "Get Interview Answers Realtime",
+  title: "即時會議助理",
+  description: "提供即時逐字稿、AI 協作建議與會議重點整理的智慧助理。",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Interview Copilot",
+    title: "即時會議助理",
   },
   formatDetection: {
     telephone: false,
@@ -48,11 +45,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="zh-Hant-TW">
       <head>
         <link rel="icon" href="/icons/favicon.ico" />
       </head>
-      <body className={inter.className}>
+      <body className="font-sans">
         <PWARegister />
         {children}
       </body>

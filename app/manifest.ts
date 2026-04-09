@@ -2,10 +2,9 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Realtime Interview Copilot",
-    short_name: "Interview Copilot",
-    description:
-      "Get Interview Answers Realtime - Your AI-powered interview assistant",
+    name: "即時會議助理",
+    short_name: "會議助理",
+    description: "即時整理會議逐字稿、產出摘要並提供 AI 協作建議的行動助理。",
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",

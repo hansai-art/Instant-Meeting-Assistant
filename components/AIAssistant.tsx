@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
 import { SendIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 
 interface Message {
   id: string;
@@ -21,13 +21,10 @@ export function AIAssistant() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const controller = useRef<AbortController | null>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    if (messages.length === 0) return;
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages.length]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -59,7 +56,7 @@ export function AIAssistant() {
         body: JSON.stringify({
           prompt: input,
           flag: "copilot",
-          bg: "You are a direct, no-nonsense interview assistant. Answer questions with straight, concise facts. Do not use filler words like 'alright', 'umm', 'ha', 'you know', 'basically', or 'like'. Get directly to the point. Be professional and precise. Answer exactly what is asked without extra fluff.",
+          bg: "你是一位直接、專業的 AI 助理，請一律使用臺灣繁體中文回答。回答要精準、精簡、切中問題，不要加入贅詞或多餘寒暄。",
         }),
         signal: controller.current.signal,
       });
@@ -118,13 +115,13 @@ export function AIAssistant() {
           }
         }
       }
-    } catch (err: any) {
-      if (err.name !== "AbortError") {
+    } catch (err: unknown) {
+      if (!(err instanceof Error && err.name === "AbortError")) {
         console.error("Error:", err);
         const errorMessage: Message = {
           id: (Date.now() + 2).toString(),
           role: "assistant",
-          content: "Sorry, I encountered an error. Please try again.",
+          content: "抱歉，剛剛發生錯誤，請再試一次。",
           timestamp: new Date().toISOString(),
         };
         setMessages((prev) => [...prev, errorMessage]);
@@ -142,8 +139,9 @@ export function AIAssistant() {
         <Card className="absolute bottom-20 right-0 w-96 h-[500px] flex flex-col shadow-2xl border border-green-200 bg-white rounded-lg overflow-hidden">
           {/* Header */}
           <div className="bg-gradient-to-r from-green-600 to-green-700 text-white p-4 flex justify-between items-center">
-            <h3 className="font-bold text-lg">Interview Assistant</h3>
+            <h3 className="font-bold text-lg">AI 會議助理</h3>
             <button
+              type="button"
               onClick={() => setIsOpen(false)}
               className="text-white hover:text-gray-200 text-xl leading-none"
             >
@@ -157,10 +155,10 @@ export function AIAssistant() {
               <div className="flex items-center justify-center h-full text-center">
                 <div className="text-gray-500">
                   <p className="text-sm font-medium">
-                    Ask me anything about your interview!
+                    任何會議或面試相關問題都可以問我！
                   </p>
                   <p className="text-xs text-gray-400 mt-2">
-                    Tips, strategies, or clarifications
+                    例如重點整理、應答建議或觀念釐清
                   </p>
                 </div>
               </div>
@@ -197,7 +195,7 @@ export function AIAssistant() {
               <div className="flex justify-start">
                 <div className="bg-gray-200 text-gray-900 px-4 py-2 rounded-lg rounded-bl-none flex items-center gap-2">
                   <div className="w-4 h-4 animate-spin rounded-full border-2 border-green-600 border-t-transparent" />
-                  <span className="text-sm">Thinking...</span>
+                  <span className="text-sm">思考中…</span>
                 </div>
               </div>
             )}
@@ -213,7 +211,7 @@ export function AIAssistant() {
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask a question..."
+              placeholder="輸入問題…"
               disabled={isLoading}
               className="flex-1 text-sm border-gray-300 focus:border-green-500 focus:ring-green-500"
             />
@@ -231,6 +229,7 @@ export function AIAssistant() {
 
       {/* Toggle Button */}
       <button
+        type="button"
         onClick={() => setIsOpen(!isOpen)}
         className="w-14 h-14 rounded-full bg-gradient-to-br from-green-600 to-green-700 text-white shadow-lg hover:shadow-xl hover:from-green-700 hover:to-green-800 transition-all flex items-center justify-center text-xl font-bold border-2 border-green-500"
       >
