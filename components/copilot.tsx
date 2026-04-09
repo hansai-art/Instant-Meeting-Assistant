@@ -78,7 +78,7 @@ export function Copilot({ addInSavedData }: CopilotProps) {
       transcriptionBoxRef.current.scrollTop =
         transcriptionBoxRef.current.scrollHeight;
     }
-  }, [transcriptionSegments.length]);
+  }, [transcriptionSegments]);
 
   const handleFlag = useCallback((checked: boolean) => {
     if (!checked) {
