@@ -211,13 +211,13 @@ export default function RecorderTranscriber({
   if (isLoadingKey)
     return (
       <span className="w-full p-2 text-center text-xs bg-red-500 text-white">
-        Fetching API key...
+        正在取得錄音金鑰…
       </span>
     );
   if (isLoading)
     return (
       <span className="w-full p-2 text-center text-xs bg-red-500 text-white">
-        Connecting to Deepgram...
+        正在連線語音轉寫服務…
       </span>
     );
 
@@ -233,12 +233,12 @@ export default function RecorderTranscriber({
           {!micOpen ? (
             <div className="flex items-center">
               <MicIcon className="h-4 w-4 -translate-x-0.5 mr-2" />
-              Start listening
+              開始擷取會議音訊
             </div>
           ) : (
             <div className="flex items-center">
               <MicOffIcon className="h-4 w-4 -translate-x-0.5 mr-2" />
-              Stop listening
+              停止擷取會議音訊
             </div>
           )}
         </Button>
@@ -249,10 +249,10 @@ export default function RecorderTranscriber({
       >
         <span className="text-sm text-gray-400">
           {isListening
-            ? "✓ Connected to server"
+            ? "✓ 已連線並持續轉寫"
             : !micOpen
-              ? "Start listening to connect"
-              : "Connecting..."}
+              ? "請先開始擷取音訊以建立連線"
+              : "連線中…"}
         </span>
         <MicIcon
           className={cn("h-4 w-4 -translate-x-0.5 mr-2", {

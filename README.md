@@ -1,94 +1,120 @@
-# Realtime Interview Copilot
+# 即時會議助理
 
-## Description
+## 專案說明
 
-Realtime Interview Copilot is a Progressive Web Application (PWA) that provides real-time AI assistance during interviews. It transcribes audio in real-time using Deepgram, allows users to ask questions to an AI assistant, and generates AI-powered responses based on interview context and transcription. The app can be installed on any device for offline access and a native app-like experience.
+即時會議助理是一套 Progressive Web App（PWA），可在會議進行中即時擷取音訊、產生逐字稿，並搭配 AI 產出摘要、重點整理與協作建議。你可以把它當成會議側錄、即時筆記與問答助手，在瀏覽器中直接使用，也能安裝成接近原生 App 的體驗。
 
-> **📱 Looking for the Desktop App?**  
-> If you're looking for the desktop application code, please check the [`desktop-app`](https://github.com/innovatorved/realtime-interview-copilot/tree/nightly) branch.
+## 技術組成
 
-## Technologies
+- 前端：React、TypeScript、Next.js、Tailwind CSS、Shadcn/UI
+- 後端：Node.js
+- API：Deepgram（即時語音轉寫）、Google Generative AI（AI 回應生成）
+- PWA：Service Worker、Web App Manifest
 
-- Frontend: React, TypeScript, Next.js, Tailwind CSS, Shadcn/UI
-- Backend: Node.js
-- APIs: Deepgram (real-time transcription), Google Generative AI (response generation)
-- PWA: Service Worker, Web App Manifest
+## 安裝與啟動
 
+### 環境需求
 
-## Installation and Setup
+- Node.js 20 以上
+- pnpm（也可改用 npm / yarn，但專案預設使用 pnpm）
+- API 金鑰：
+  - Deepgram API Key
+  - Google Generative AI API Key
 
-### Prerequisites
-- Node.js 20+
-- pnpm (or npm/yarn)
-- API Keys:
-  - Deepgram API key
-  - Google Generative AI API key
+### 安裝步驟
 
-### Steps
+1. 下載專案：
 
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/innovatorved/realtime-interview-copilot.git
-    cd realtime-interview-copilot
-    ```
+   ```bash
+   git clone https://github.com/hansai-art/Instant-Meeting-Assistant.git
+   cd Instant-Meeting-Assistant
+   ```
 
-2. Install dependencies:
-    ```bash
-    pnpm install
-    ```
+2. 安裝相依套件：
 
-3. Create a `.env.local` file:
-    ```
-    DEEPGRAM_API_KEY=your_deepgram_api_key
-    GOOGLE_GENERATIVE_AI_API_KEY=your_google_ai_api_key
-    ```
+   ```bash
+   pnpm install
+   ```
 
-4. Run the development server:
-    ```bash
-    pnpm dev
-    ```
+3. 建立 `.env.local`：
 
-5. Access at `http://localhost:3000`
+   ```env
+   DEEPGRAM_API_KEY=your_deepgram_api_key
+   GOOGLE_GENERATIVE_AI_API_KEY=your_google_ai_api_key
+   ```
 
-## How It Works
+4. 啟動開發伺服器：
 
-### Workflow
-1. User enters interview background information
-2. Click microphone to start recording/transcription
-3. Deepgram API transcribes audio in real-time
-4. User chooses Copilot or Summerizer mode
-5. Click Process to generate AI response
-6. Use AI Assistant box to ask questions anytime
-7. Save important responses to history
+   ```bash
+   pnpm dev
+   ```
 
-### AI Assistant Workflow
-1. Type question in floating Ask AI box
-2. Submit with Enter or click send
-3. AI generates detailed answer
-4. Minimize box when not needed
-5. Drag box to reposition on screen
+5. 在瀏覽器開啟 `http://localhost:3000`
 
-## Keyboard shortcuts
+## 頁面詳細教學
 
-Realtime Interview Copilot includes several single-key shortcuts to speed up common actions. These shortcuts are disabled while you're typing in any input or textarea so they won't interfere with normal typing.
+### 1. 首頁總覽
 
-- K — Focus the floating Ask AI input box
-- S — Switch to "Summerizer" mode
-- C — Switch to "Copilot" mode
-- Enter — Submit / Process (when not focused inside an input/textarea)
-- Escape — Clear the current AI answer
+首頁主要分成四個區塊：
 
-Note: Shortcuts are intentionally ignored when an input or textarea has focus to allow normal typing (including using Enter inside inputs).
+- **會議背景與需求說明**：輸入議程、角色、目標、限制與你想請 AI 協助的方向。
+- **即時逐字稿**：開始擷取音訊後，會顯示附帶時間戳記的逐字稿內容。
+- **模式切換與 AI 回應**：可在摘要模式與協作模式間切換，再請 AI 產出內容。
+- **右上角 AI 問答框**：用來快速追問細節、補充觀念或索取建議。
 
-## API Routes
+### 2. 建議操作流程
 
-- `POST /api/completion` - Generate AI responses
-- `POST /api/deepgram` - Handle Deepgram key generations
+1. 先在「會議背景與需求說明」填入本次討論的脈絡。
+2. 點擊「開始擷取會議音訊」並選擇正確的頁面或系統音訊來源。
+3. 確認右下角狀態顯示已連線，等待逐字稿開始更新。
+4. 視需求切換為「摘要模式」或「協作模式」。
+5. 點擊「產生回應」取得 AI 內容。
+6. 若內容值得保留，按下「儲存到紀錄」以便稍後回顧。
 
-## Contributing
+### 3. 模式說明
 
-Contributions are welcome! Please refer to the [CONTRIBUTING.md](https://github.com/innovatorved/realtime-interview-copilot/blob/main/CONTRIBUTING.md) file for guidelines.
+- **摘要模式**：適合快速整理討論重點、待辦事項、決策結論與會後摘要。
+- **協作模式**：適合需要即時建議、回覆草稿、追問方向或下一步行動方案時使用。
 
-## License
+### 4. AI 問答框教學
 
-This project is licensed under the [License](https://github.com/innovatorved/realtime-interview-copilot/blob/main/LICENSE). See the LICENSE file for details.
+右上角浮動的 AI 問答框提供快速追問能力：
+
+1. 直接輸入問題。
+2. 按 Enter 或送出按鈕取得回答。
+3. 可拖曳標題列改變位置。
+4. 可收合面板，避免遮住主要畫面。
+5. 若想清除目前回答，可按 `Esc`。
+
+### 5. 紀錄區說明
+
+每次儲存後，內容會保留在頁面下方的紀錄區。你可以：
+
+- 快速重看先前產生的摘要或建議
+- 用來整理會議結論
+- 視需要刪除不再使用的紀錄
+
+## 快捷鍵
+
+為了讓會議中操作更快速，首頁支援以下快捷鍵：
+
+- `K`：聚焦右上角 AI 問答輸入框
+- `S`：切換到摘要模式
+- `C`：切換到協作模式
+- `Enter`：在沒有聚焦輸入框時送出主表單
+- `Esc`：清除 AI 問答框目前回答
+
+> 注意：當游標位於輸入框或多行文字框內時，快捷鍵會自動停用，避免影響正常輸入。
+
+## API 路由
+
+- `POST /api/completion`：產生 AI 回應
+- `POST /api/deepgram`：建立 Deepgram 臨時金鑰
+
+## 參與貢獻
+
+歡迎提交 Issue 或 Pull Request。若要參與開發，請參考 `CONTRIBUTING.md`。
+
+## 授權
+
+本專案採用儲存庫內 `LICENSE` 所列授權條款。

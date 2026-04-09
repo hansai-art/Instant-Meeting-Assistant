@@ -49,17 +49,17 @@ export function InstallPWA() {
           onClick={handleInstallClick}
           className="bg-[#2f855a] hover:bg-[#276749] text-white shadow-lg"
         >
-          Install App
+          安裝應用程式
         </Button>
       )}
       {isIOS && !isStandalone && (
         <div className="bg-[#2f855a] text-white p-4 rounded-lg shadow-lg max-w-sm">
           <p className="text-sm">
-            To install this app on your iOS device, tap the share button{" "}
+            若要在 iOS 裝置安裝此 App，請先點一下分享按鈕{" "}
             <span role="img" aria-label="share icon">
               ⎋
             </span>{" "}
-            and then &quot;Add to Home Screen&quot;{" "}
+            ，再選擇「加入主畫面」{" "}
             <span role="img" aria-label="plus icon">
               ➕
             </span>

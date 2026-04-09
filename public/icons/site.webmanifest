@@ -1,6 +1,6 @@
 {
-  "name": "realtime-interview-copilot",
-  "short_name": "",
+  "name": "即時會議助理",
+  "short_name": "會議助理",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
